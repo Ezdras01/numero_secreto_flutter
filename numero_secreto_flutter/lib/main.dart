@@ -68,6 +68,15 @@ class _JuegoAdivinarNumeroState extends State<JuegoAdivinarNumero> {
         _mensajeFinal = resultado.tipo == TipoResultado.correcto
             ? '¡Adivinaste el número! 🎉'
             : 'Juego terminado. El número era ${_controlador.historial.last['numero']}.';
+        // reinicio de juego despues de 2 segundos
+        Future.delayed(const Duration(seconds: 2), () {
+        if (mounted){
+          setState(() {
+            _controlador.iniciarJuego(_nivelActual);
+            _mensajeFinal = null;
+          });
+        }
+        });
       }
     });
   }
