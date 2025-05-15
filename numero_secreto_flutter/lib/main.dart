@@ -55,10 +55,34 @@ class _JuegoAdivinarNumeroState extends State<JuegoAdivinarNumero> {
           ),
         ],
       ),
-      body: const Center(
-        child: Text(
-          'Bienvenido al juego 😄',
-          style: TextStyle(fontSize: 20),
+      body: Padding(
+        padding: const EdgeInsets.all(16.0),
+        child: Column(
+          children: [
+            // ==================== Caja de entrada de número ====================
+            Row(
+              children: [
+                // Caja para escribir el número
+                const Expanded(
+                  child: TextField(
+                    keyboardType: TextInputType.number,
+                    decoration: InputDecoration(
+                      labelText: 'Ingresa un número',
+                      border: OutlineInputBorder(),
+                    ),
+                  ),
+                ),
+                const SizedBox(width: 10),
+                // Botón para enviar el número
+                ElevatedButton(
+                  onPressed: () {
+                    // Aquí más adelante llamaremos al método para enviar el número
+                  },
+                  child: const Text('Enviar'),
+                ),
+              ],
+            ),
+          ],
         ),
       ),
     );
