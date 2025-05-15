@@ -26,4 +26,18 @@ class ControladorJuego {
   List<int> get numerosMenores => List.unmodifiable(_numerosMenores);
   List<Map<String, dynamic>> get historial => List.unmodifiable(_historial);
 
+//nos ayuda a iniciar el juego con el nivel de dificultad seleccionado
+  void iniciarJuego(NivelDificultad nivel) {
+    _dificultadActual = Dificultad.desdeNivel(nivel);
+    _numeroSecreto = _aleatorio.nextInt(// genra el numero secreto de forma aleatoria dependiendo del nivel de dificultad
+          _dificultadActual.maximo - _dificultadActual.minimo + 1,
+        ) +
+        _dificultadActual.minimo;
+    _intentosRestantes = _dificultadActual.intentosMaximos;// aqui establecemos los intentos que tendrá el juador dependiendo del nivel de dificultad
+    _numerosMayores.clear();//limpiar columna mayores que 
+    _numerosMenores.clear();// limpirar columna menores que
+    _juegoTerminado = false;
+  }
+
+
 }
