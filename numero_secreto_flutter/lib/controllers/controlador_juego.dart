@@ -39,5 +39,56 @@ class ControladorJuego {
     _juegoTerminado = false;
   }
 
+//procesamos el intento del jugador y devolevemos el resultado
+
+  IntentoResultado intentar(int numeroIngresado) {
+    if (_juegoTerminado || _intentosRestantes <= 0) {// si se nos acaban los intentos o el juego ya ha terminado 
+      throw Exception('El juego ha terminado. Reinicia para volver a jugar.');
+    }
+
+    _intentosRestantes--;//variable privada para saber cuantos intentos nos quedan
+
+    TipoResultado tipo;
+
+//para saber si el numero ingresado es mayor que el numero secreto
+    if (numeroIngresado > _numeroSecreto) {
+      tipo = TipoResultado.mayor;
+      _numerosMayores.add(numeroIngresado);
+//para saber si el numero ingresado es menor que el numero secreto
+    } else if (numeroIngresado < _numeroSecreto) {
+      tipo = TipoResultado.menor;
+      _numerosMenores.add(numeroIngresado);
+//para saber si el numero ingresado es correcto
+    } else {
+      tipo = TipoResultado.correcto;
+      _juegoTerminado = true;
+      _agregarAlHistorial(acerto: true);
+    }
+// Si se acaban los intentos y no se adivinó
+    if (_intentosRestantes == 0 && tipo != TipoResultado.correcto) {
+      _juegoTerminado = true;
+      _agregarAlHistorial(acerto: false);
+    }
+
+    return IntentoResultado(
+      numeroIngresado: numeroIngresado,
+      tipo: tipo,
+    );
+  }
+
+  /// Agrega el resultado del juego al historial
+  void _agregarAlHistorial({required bool acerto}) {
+    _historial.add({
+      'numero': _numeroSecreto,
+      'acerto': acerto,
+    });
+  }
+
+  /// Limpia completamente el historial
+  void limpiarHistorial() {
+    _historial.clear();
+  }
+
+
 
 }
