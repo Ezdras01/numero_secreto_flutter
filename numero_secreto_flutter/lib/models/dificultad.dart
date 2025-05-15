@@ -27,4 +27,17 @@ class Dificultad {
     }
   }
 
+    String obtenerNombre() {
+    switch (nivel) {
+      case NivelDificultad.facil:
+        return 'Fácil';
+      case NivelDificultad.medio:
+        return 'Medio';
+      case NivelDificultad.avanzado:
+        return 'Avanzado';
+      case NivelDificultad.extremo:
+        return 'Extremo';
+    }
+  }
+
 }// el que cierra 
