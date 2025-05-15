@@ -52,8 +52,8 @@ class _JuegoAdivinarNumeroState extends State<JuegoAdivinarNumero> {
   // ================== Función para enviar número ==================
   void _enviarNumero() {
     final entrada = _campoNumero.text;
-
     final error = ValidadorEntrada.validar(entrada, _controlador.dificultad);
+
     if (error != null) {
       _mostrarAlerta(error);
       return;
@@ -64,7 +64,6 @@ class _JuegoAdivinarNumeroState extends State<JuegoAdivinarNumero> {
 
     setState(() {
       _campoNumero.clear();
-
       if (_controlador.juegoTerminado) {
         _mensajeFinal = resultado.tipo == TipoResultado.correcto
             ? '¡Adivinaste el número! 🎉'
@@ -90,7 +89,85 @@ class _JuegoAdivinarNumeroState extends State<JuegoAdivinarNumero> {
     );
   }
 
-  // ================== Interfaz ==================
+  // ================== Diálogo de confirmación ==================
+  void _mostrarDialogoConfirmacionDificultad() {
+    bool limpiarHistorial = false;
+
+    showDialog(
+      context: context,
+      builder: (_) {
+        return StatefulBuilder(
+          builder: (context, setStateDialog) {
+            return AlertDialog(
+              title: const Text('¿Cambiar dificultad?'),
+              content: Column(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  const Text('¿Deseas reiniciar el historial también?'),
+                  Row(
+                    children: [
+                      Checkbox(
+                        value: limpiarHistorial,
+                        onChanged: (valor) {
+                          setStateDialog(() {
+                            limpiarHistorial = valor!;
+                          });
+                        },
+                      ),
+                      const Text('Sí, limpiar historial')
+                    ],
+                  ),
+                ],
+              ),
+              actions: [
+                TextButton(
+                  onPressed: () => Navigator.pop(context),
+                  child: const Text('Cancelar'),
+                ),
+                TextButton(
+                  onPressed: () {
+                    Navigator.pop(context);
+                    _mostrarSelectorDificultad(limpiarHistorial);
+                  },
+                  child: const Text('Cambiar'),
+                ),
+              ],
+            );
+          },
+        );
+      },
+    );
+  }
+
+  void _mostrarSelectorDificultad(bool limpiarHistorial) {
+    showModalBottomSheet(
+      context: context,
+      builder: (_) {
+        return Column(
+          mainAxisSize: MainAxisSize.min,
+          children: NivelDificultad.values.map((nivel) {
+            final nombre = Dificultad.desdeNivel(nivel).obtenerNombre();
+            return ListTile(
+              title: Text(nombre),
+              onTap: () {
+                Navigator.pop(context);
+                setState(() {
+                  _nivelActual = nivel;
+                  _controlador.iniciarJuego(nivel);
+                  _campoNumero.clear();
+                  _mensajeFinal = null;
+                  if (limpiarHistorial) {
+                    _controlador.limpiarHistorial();
+                  }
+                });
+              },
+            );
+          }).toList(),
+        );
+      },
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     final dificultad = _controlador.dificultad;
@@ -101,9 +178,7 @@ class _JuegoAdivinarNumeroState extends State<JuegoAdivinarNumero> {
         actions: [
           IconButton(
             icon: const Icon(Icons.settings),
-            onPressed: () {
-              // Aquí más adelante pondremos el cambio de nivel
-            },
+            onPressed: _mostrarDialogoConfirmacionDificultad,
           ),
         ],
       ),
