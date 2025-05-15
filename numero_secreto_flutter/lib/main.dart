@@ -164,9 +164,9 @@ class _JuegoAdivinarNumeroState extends State<JuegoAdivinarNumero> {
                 child: Row(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    _columna('Mayor a', _controlador.numerosMayores),
+                    _columna('Menor a', _controlador.numerosMayores),
                     const SizedBox(width: 16),
-                    _columna('Menor a', _controlador.numerosMenores),
+                    _columna('Mayor a', _controlador.numerosMenores),
                     const SizedBox(width: 16),
                     _columnaHistorial(),
                   ],
