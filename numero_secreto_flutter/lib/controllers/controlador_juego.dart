@@ -19,5 +19,11 @@ class ControladorJuego {
 //creacion de lista privada para el historial de intentos 
   final List<Map<String, dynamic>> _historial = [];
 
+  Dificultad get dificultad => _dificultadActual;
+  int get intentosRestantes => _intentosRestantes;
+  bool get juegoTerminado => _juegoTerminado;
+  List<int> get numerosMayores => List.unmodifiable(_numerosMayores);
+  List<int> get numerosMenores => List.unmodifiable(_numerosMenores);
+  List<Map<String, dynamic>> get historial => List.unmodifiable(_historial);
 
 }
