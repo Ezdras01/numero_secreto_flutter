@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:numero_secreto_flutter/controllers/controlador_juego.dart';
 import 'package:numero_secreto_flutter/models/dificultad.dart';
 import 'package:numero_secreto_flutter/utils/validador_entrada.dart';
-
+import 'package:numero_secreto_flutter/models/intento_resultado.dart';
 void main() {
   runApp(const JuegoApp());
 }
@@ -30,8 +30,12 @@ class JuegoAdivinarNumero extends StatefulWidget {
 }
 
 class _JuegoAdivinarNumeroState extends State<JuegoAdivinarNumero> {
+  // ================== SECCIÓN: Variables de estado ==================
   final ControladorJuego _controlador = ControladorJuego();
+  final TextEditingController _campoNumero = TextEditingController();
+
   NivelDificultad _nivelActual = NivelDificultad.facil;
+  String? _mensajeFinal;
 
   @override
   void initState() {
@@ -39,6 +43,54 @@ class _JuegoAdivinarNumeroState extends State<JuegoAdivinarNumero> {
     _controlador.iniciarJuego(_nivelActual);
   }
 
+  @override
+  void dispose() {
+    _campoNumero.dispose();
+    super.dispose();
+  }
+
+  // ================== SECCIÓN: Función para enviar número ==================
+  void _enviarNumero() {
+    final entrada = _campoNumero.text;
+
+    final error = ValidadorEntrada.validar(entrada, _controlador.dificultad);
+    if (error != null) {
+      _mostrarAlerta(error);
+      return;
+    }
+
+    final numero = int.parse(entrada);
+    final resultado = _controlador.intentar(numero);
+
+    setState(() {
+      _campoNumero.clear();
+
+      if (_controlador.juegoTerminado) {
+        _mensajeFinal = resultado.tipo == TipoResultado.correcto
+            ? '¡Adivinaste el número! 🎉'
+            : 'Juego terminado. El número era ${_controlador.historial.last['numero']}.';
+      }
+    });
+  }
+
+  // ================== SECCIÓN: Mostrar alertas ==================
+  void _mostrarAlerta(String mensaje) {
+    showDialog(
+      context: context,
+      builder: (_) => AlertDialog(
+        title: const Text('Entrada inválida'),
+        content: Text(mensaje),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.pop(context),
+            child: const Text('Aceptar'),
+          ),
+        ],
+      ),
+    );
+  }
+
+  // ================== SECCIÓN: Interfaz ==================
   @override
   Widget build(BuildContext context) {
     final dificultad = _controlador.dificultad;
@@ -63,10 +115,11 @@ class _JuegoAdivinarNumeroState extends State<JuegoAdivinarNumero> {
             Row(
               children: [
                 // Caja para escribir el número
-                const Expanded(
+                Expanded(
                   child: TextField(
+                    controller: _campoNumero,
                     keyboardType: TextInputType.number,
-                    decoration: InputDecoration(
+                    decoration: const InputDecoration(
                       labelText: 'Ingresa un número',
                       border: OutlineInputBorder(),
                     ),
@@ -75,13 +128,24 @@ class _JuegoAdivinarNumeroState extends State<JuegoAdivinarNumero> {
                 const SizedBox(width: 10),
                 // Botón para enviar el número
                 ElevatedButton(
-                  onPressed: () {
-                    // Aquí más adelante llamaremos al método para enviar el número
-                  },
+                  onPressed: _controlador.juegoTerminado ? null : _enviarNumero,
                   child: const Text('Enviar'),
                 ),
               ],
             ),
+
+            // =============== Mensaje final si el juego terminó ===============
+            if (_mensajeFinal != null) ...[
+              const SizedBox(height: 12),
+              Text(
+                _mensajeFinal!,
+                style: TextStyle(
+                  fontWeight: FontWeight.bold,
+                  fontSize: 18,
+                  color: _mensajeFinal!.contains('🎉') ? Colors.green : Colors.red,
+                ),
+              ),
+            ],
           ],
         ),
       ),
