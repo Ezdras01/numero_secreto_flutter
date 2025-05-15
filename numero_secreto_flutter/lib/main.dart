@@ -187,6 +187,12 @@ class _JuegoAdivinarNumeroState extends State<JuegoAdivinarNumero> {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
+            // ==================== Visulización de intentos restantes ====================
+            Text(
+              'Intentos restantes: ${_controlador.intentosRestantes}',
+              style: const TextStyle(fontSize: 16, fontWeight: FontWeight.w500),
+            ),
+            const SizedBox(height: 12),
             // ==================== Caja de entrada de número ====================
             Row(
               children: [
