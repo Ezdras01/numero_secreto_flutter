@@ -13,7 +13,10 @@ class ControladorJuego {
   late int _intentosRestantes = 0;
   bool _juegoTerminado = false;
 
+  final List<int> _numerosMayores = [];
+  final List<int> _numerosMenores = [];
 
+  final List<Map<String, dynamic>> _historial = [];
 
 
 }
