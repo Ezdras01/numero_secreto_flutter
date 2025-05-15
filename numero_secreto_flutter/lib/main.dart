@@ -30,7 +30,7 @@ class JuegoAdivinarNumero extends StatefulWidget {
 }
 
 class _JuegoAdivinarNumeroState extends State<JuegoAdivinarNumero> {
-  // ================== SECCIÓN: Variables de estado ==================
+  // ================== Variables de estado ==================
   final ControladorJuego _controlador = ControladorJuego();
   final TextEditingController _campoNumero = TextEditingController();
 
@@ -49,7 +49,7 @@ class _JuegoAdivinarNumeroState extends State<JuegoAdivinarNumero> {
     super.dispose();
   }
 
-  // ================== SECCIÓN: Función para enviar número ==================
+  // ================== Función para enviar número ==================
   void _enviarNumero() {
     final entrada = _campoNumero.text;
 
@@ -73,7 +73,7 @@ class _JuegoAdivinarNumeroState extends State<JuegoAdivinarNumero> {
     });
   }
 
-  // ================== SECCIÓN: Mostrar alertas ==================
+  // ================== Mostrar alertas ==================
   void _mostrarAlerta(String mensaje) {
     showDialog(
       context: context,
@@ -90,7 +90,7 @@ class _JuegoAdivinarNumeroState extends State<JuegoAdivinarNumero> {
     );
   }
 
-  // ================== SECCIÓN: Interfaz ==================
+  // ================== Interfaz ==================
   @override
   Widget build(BuildContext context) {
     final dificultad = _controlador.dificultad;
@@ -110,6 +110,7 @@ class _JuegoAdivinarNumeroState extends State<JuegoAdivinarNumero> {
       body: Padding(
         padding: const EdgeInsets.all(16.0),
         child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             // ==================== Caja de entrada de número ====================
             Row(
@@ -146,9 +147,90 @@ class _JuegoAdivinarNumeroState extends State<JuegoAdivinarNumero> {
                 ),
               ),
             ],
+
+            const SizedBox(height: 24),
+
+            // ================= Título columnas =================
+            const Text(
+              'Resultados:',
+              style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+            ),
+            const SizedBox(height: 8),
+
+            // ================= Columnas =================
+            Expanded(
+              child: SingleChildScrollView(
+                scrollDirection: Axis.horizontal,
+                child: Row(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    _columna('Mayor a', _controlador.numerosMayores),
+                    const SizedBox(width: 16),
+                    _columna('Menor a', _controlador.numerosMenores),
+                    const SizedBox(width: 16),
+                    _columnaHistorial(),
+                  ],
+                ),
+              ),
+            ),
           ],
         ),
       ),
+    );
+  }
+
+  // ================== Widgets para columnas ==================
+  Widget _columna(String titulo, List<int> numeros) {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Text(titulo, style: const TextStyle(fontWeight: FontWeight.bold)),
+        const SizedBox(height: 8),
+        Container(
+          width: 100,
+          padding: const EdgeInsets.all(8),
+          decoration: BoxDecoration(
+            color: Colors.grey[200],
+            borderRadius: BorderRadius.circular(8),
+          ),
+          child: Column(
+            children: numeros
+                .map((n) => Text(n.toString(), style: const TextStyle(fontSize: 16)))
+                .toList(),
+          ),
+        ),
+      ],
+    );
+  }
+
+  Widget _columnaHistorial() {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        const Text('Historial', style: TextStyle(fontWeight: FontWeight.bold)),
+        const SizedBox(height: 8),
+        Container(
+          width: 120,
+          padding: const EdgeInsets.all(8),
+          decoration: BoxDecoration(
+            color: Colors.grey[200],
+            borderRadius: BorderRadius.circular(8),
+          ),
+          child: Column(
+            children: _controlador.historial.map((registro) {
+              final numero = registro['numero'];
+              final acerto = registro['acerto'] as bool;
+              return Text(
+                numero.toString(),
+                style: TextStyle(
+                  fontSize: 16,
+                  color: acerto ? Colors.green : Colors.red,
+                ),
+              );
+            }).toList(),
+          ),
+        ),
+      ],
     );
   }
 }
