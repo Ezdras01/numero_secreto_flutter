@@ -13,5 +13,18 @@ class Dificultad {
     required this.maximo,
     required this.intentosMaximos,
   });
-  
+
+  factory Dificultad.desdeNivel(NivelDificultad nivel) {
+    switch (nivel) {
+      case NivelDificultad.facil:
+        return Dificultad(nivel: nivel, minimo: 1, maximo: 10, intentosMaximos: 5);
+      case NivelDificultad.medio:
+        return Dificultad(nivel: nivel, minimo: 1, maximo: 20, intentosMaximos: 8);
+      case NivelDificultad.avanzado:
+        return Dificultad(nivel: nivel, minimo: 1, maximo: 100, intentosMaximos: 15);
+      case NivelDificultad.extremo:
+        return Dificultad(nivel: nivel, minimo: 1, maximo: 1000, intentosMaximos: 25);
+    }
+  }
+
 }// el que cierra 
