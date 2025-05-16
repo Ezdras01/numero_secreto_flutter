@@ -4,6 +4,7 @@ import 'package:numero_secreto_flutter/controllers/controlador_juego.dart';
 import 'package:numero_secreto_flutter/models/dificultad.dart';
 import 'package:numero_secreto_flutter/utils/validador_entrada.dart';
 import 'package:numero_secreto_flutter/models/intento_resultado.dart';
+
 void main() {
   runApp(const JuegoApp());
 }
@@ -34,6 +35,10 @@ class _JuegoAdivinarNumeroState extends State<JuegoAdivinarNumero> {
   final ControladorJuego _controlador = ControladorJuego();
   final TextEditingController _campoNumero = TextEditingController();
 
+  final ScrollController _scrollMayor = ScrollController();
+  final ScrollController _scrollMenor = ScrollController();
+  final ScrollController _scrollHistorial = ScrollController();
+
   NivelDificultad _nivelActual = NivelDificultad.facil;
   String? _mensajeFinal;
 
@@ -50,36 +55,50 @@ class _JuegoAdivinarNumeroState extends State<JuegoAdivinarNumero> {
   }
 
   // ================== Función para enviar número ==================
-  void _enviarNumero() {
-    final entrada = _campoNumero.text;
-    final error = ValidadorEntrada.validar(entrada, _controlador.dificultad);
+void _enviarNumero() {
+  final entrada = _campoNumero.text;
+  final error = ValidadorEntrada.validar(entrada, _controlador.dificultad);
 
-    if (error != null) {
-      _mostrarAlerta(error);
-      return;
-    }
+  if (error != null) {
+    _mostrarAlerta(error);
+    return;
+  }
 
-    final numero = int.parse(entrada);
-    final resultado = _controlador.intentar(numero);
+  final numero = int.parse(entrada);
+  final resultado = _controlador.intentar(numero);
 
-    setState(() {
-      _campoNumero.clear();
-      if (_controlador.juegoTerminado) {
-        _mensajeFinal = resultado.tipo == TipoResultado.correcto
-            ? '¡Adivinaste el número! 🎉'
-            : 'Juego terminado. El número era ${_controlador.historial.last['numero']}.';
-        // reinicio de juego despues de 2 segundos
-        Future.delayed(const Duration(seconds: 2), () {
-        if (mounted){
+  setState(() {
+    _campoNumero.clear();
+
+    if (_controlador.juegoTerminado) {
+      _mensajeFinal = resultado.tipo == TipoResultado.correcto
+          ? '¡Adivinaste el número! 🎉'
+          : 'Juego terminado. El número era ${_controlador.historial.last['numero']}.';
+
+      Future.delayed(const Duration(seconds: 2), () {
+        if (mounted) {
           setState(() {
             _controlador.iniciarJuego(_nivelActual);
             _mensajeFinal = null;
           });
         }
-        });
-      }
-    });
-  }
+      });
+    }
+  });
+  // Desplazar las listas hacia abajo después de agregar un nuevo número
+  WidgetsBinding.instance.addPostFrameCallback((_) {
+    if (_scrollMayor.hasClients) {
+      _scrollMayor.jumpTo(_scrollMayor.position.maxScrollExtent);
+    }
+    if (_scrollMenor.hasClients) {
+      _scrollMenor.jumpTo(_scrollMenor.position.maxScrollExtent);
+    }
+    if (_scrollHistorial.hasClients) {
+      _scrollHistorial.jumpTo(_scrollHistorial.position.maxScrollExtent);
+    }
+  });
+}
+
 
   // ================== Mostrar alertas ==================
   void _mostrarAlerta(String mensaje) {
@@ -233,7 +252,8 @@ class _JuegoAdivinarNumeroState extends State<JuegoAdivinarNumero> {
                 style: TextStyle(
                   fontWeight: FontWeight.bold,
                   fontSize: 18,
-                  color: _mensajeFinal!.contains('🎉') ? Colors.green : Colors.red,
+                  color:
+                      _mensajeFinal!.contains('🎉') ? Colors.green : Colors.red,
                 ),
               ),
             ],
@@ -254,9 +274,11 @@ class _JuegoAdivinarNumeroState extends State<JuegoAdivinarNumero> {
                 child: Row(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    _columna('Menor a', _controlador.numerosMayores),
+                    _columna(
+                        'Menor a', _controlador.numerosMayores, _scrollMayor),
                     const SizedBox(width: 16),
-                    _columna('Mayor a', _controlador.numerosMenores),
+                    _columna(
+                        'Mayor a', _controlador.numerosMenores, _scrollMenor),
                     const SizedBox(width: 16),
                     _columnaHistorial(),
                   ],
@@ -270,7 +292,8 @@ class _JuegoAdivinarNumeroState extends State<JuegoAdivinarNumero> {
   }
 
   // ================== Widgets para columnas ==================
-  Widget _columna(String titulo, List<int> numeros) {
+  Widget _columna(
+      String titulo, List<int> numeros, ScrollController controller) {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
@@ -278,49 +301,75 @@ class _JuegoAdivinarNumeroState extends State<JuegoAdivinarNumero> {
         const SizedBox(height: 8),
         Container(
           width: 100,
-          padding: const EdgeInsets.all(8),
+          height: 180,
           decoration: BoxDecoration(
             color: Colors.grey[200],
             borderRadius: BorderRadius.circular(8),
           ),
-          child: Column(
-            children: numeros
-                .map((n) => Text(n.toString(), style: const TextStyle(fontSize: 16)))
-                .toList(),
+          child: Scrollbar(
+            thumbVisibility: true,
+            controller: controller,
+            child: ListView.builder(
+              controller: controller,
+              itemCount: numeros.length,
+              itemBuilder: (_, index) {
+                return Padding(
+                  padding: const EdgeInsets.symmetric(vertical: 4),
+                  child: Center(
+                    child: Text(
+                      numeros[index].toString(),
+                      style: const TextStyle(fontSize: 16),
+                    ),
+                  ),
+                );
+              },
+            ),
           ),
         ),
       ],
     );
   }
 
-  Widget _columnaHistorial() {
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        const Text('Historial', style: TextStyle(fontWeight: FontWeight.bold)),
-        const SizedBox(height: 8),
-        Container(
-          width: 120,
-          padding: const EdgeInsets.all(8),
-          decoration: BoxDecoration(
-            color: Colors.grey[200],
-            borderRadius: BorderRadius.circular(8),
-          ),
-          child: Column(
-            children: _controlador.historial.map((registro) {
+Widget _columnaHistorial() {
+  return Column(
+    crossAxisAlignment: CrossAxisAlignment.start,
+    children: [
+      const Text('Historial', style: TextStyle(fontWeight: FontWeight.bold)),
+      const SizedBox(height: 8),
+      Container(
+        width: 120,
+        height: 180,
+        decoration: BoxDecoration(
+          color: Colors.grey[200],
+          borderRadius: BorderRadius.circular(8),
+        ),
+        child: Scrollbar(
+          thumbVisibility: true,
+          controller: _scrollHistorial,
+          child: ListView.builder(
+            controller: _scrollHistorial,
+            itemCount: _controlador.historial.length,
+            itemBuilder: (_, index) {
+              final registro = _controlador.historial[index];
               final numero = registro['numero'];
               final acerto = registro['acerto'] as bool;
-              return Text(
-                numero.toString(),
-                style: TextStyle(
-                  fontSize: 16,
-                  color: acerto ? Colors.green : Colors.red,
+              return Padding(
+                padding: const EdgeInsets.symmetric(vertical: 4),
+                child: Center(
+                  child: Text(
+                    numero.toString(),
+                    style: TextStyle(
+                      fontSize: 16,
+                      color: acerto ? Colors.green : Colors.red,
+                    ),
+                  ),
                 ),
               );
-            }).toList(),
+            },
           ),
         ),
-      ],
-    );
-  }
+      ),
+    ],
+  );
+}
 }
