@@ -1,16 +1,34 @@
 # numero_secreto_flutter
 
-A new Flutter project.
+Un juego interactivo desarrollado en Flutter donde los usuarios deben adivinar un número secreto dentro de un rango según el nivel de dificultad seleccionado.  
+Incluye validación de entradas, historial de intentos y gestión dinámica de niveles.
 
-## Getting Started
+## Características
 
-This project is a starting point for a Flutter application.
+- 4 niveles de dificultad: Fácil, Medio, Avanzado y Extremo
+- Validación de entrada (solo números dentro del rango)
+- Historial de juegos acertados y fallidos con colores
+- Columnas scrollables para intentos mayores, menores e historial
+- Reinicio automático despues de 2 segundos al ganar o perder
+- Opción para cambiar dificultad y limpiar historial
 
-A few resources to get you started if this is your first Flutter project:
+## Instalación y ejecución
 
-- [Lab: Write your first Flutter app](https://docs.flutter.dev/get-started/codelab)
-- [Cookbook: Useful Flutter samples](https://docs.flutter.dev/cookbook)
+1. Clona el repositorio:
 
-For help getting started with Flutter development, view the
-[online documentation](https://docs.flutter.dev/), which offers tutorials,
-samples, guidance on mobile development, and a full API reference.
+```bash
+git clone https://github.com/Ezdras01/numero_secreto_flutter.git
+cd numero_secreto_flutter
+
+2. Instalar dependecias:
+flutter pub get
+
+3. Correr el proyecto:
+futter run 
+
+4. Generar APK
+flutter build apk --release
+
+## Autor
+
+- Ezra Lehi Cortez — [@Ezdras01](https://github.com/Ezdras01)
