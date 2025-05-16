@@ -54,6 +54,20 @@ class _JuegoAdivinarNumeroState extends State<JuegoAdivinarNumero> {
     super.dispose();
   }
 
+String _descripcionNivel() {
+    switch (_nivelActual) {
+      case NivelDificultad.facil:
+        return 'Adivina un número entre 1 y 10, tienes 5 intentos.';
+      case NivelDificultad.medio:
+        return 'Adivina un número entre 1 y 20, tienes 8 intentos.';
+      case NivelDificultad.avanzado:
+        return 'Adivina un número entre 1 y 100, tienes 15 intentos.';
+      case NivelDificultad.extremo:
+        return 'Adivina un número entre 1 y 1000, tienes 25 intentos.';
+    }
+  }
+
+
   // ================== Función para enviar número ==================
 void _enviarNumero() {
   final entrada = _campoNumero.text;
@@ -216,9 +230,26 @@ void _enviarNumero() {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             // ==================== Visulización de intentos restantes ====================
-            Text(
-              'Intentos restantes: ${_controlador.intentosRestantes}',
-              style: const TextStyle(fontSize: 16, fontWeight: FontWeight.w500),
+            Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(
+                  _descripcionNivel(),
+                  style: const TextStyle(
+                    fontSize: 14,
+                    fontStyle: FontStyle.italic,
+                    color: Colors.black54,
+                  ),
+                ),
+                const SizedBox(height: 6),
+                Text(
+                  'Intentos restantes: ${_controlador.intentosRestantes}',
+                  style: const TextStyle(
+                    fontSize: 16,
+                    fontWeight: FontWeight.w600,
+                  ),
+                ),
+              ],
             ),
             const SizedBox(height: 12),
             // ==================== Caja de entrada de número ====================
