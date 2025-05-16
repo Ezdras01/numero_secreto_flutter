@@ -156,7 +156,7 @@ void _enviarNumero() {
                           });
                         },
                       ),
-                      const Text('Sí, limpiar historial')
+                      const Text('Sí, limpia el historial')
                     ],
                   ),
                 ],
