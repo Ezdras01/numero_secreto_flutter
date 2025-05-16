@@ -12,6 +12,19 @@ Incluye validación de entradas, historial de intentos y gestión dinámica de n
 - Reinicio automático despues de 2 segundos al ganar o perder
 - Opción para cambiar dificultad y limpiar historial
 
+## Capturas de pantalla
+![Pantalla Inicio](flutter_01.png)
+![Cuando Ganas](flutter_03.png)
+![Cuando Pierdes](flutter_04.png)
+![Reinicio Automático](flutter_05.png)
+![Cambio de Dificultad](flutter_06.png)
+![Dificultades](flutter_07.png)
+![Nivel Medio](flutter_08.png)
+![Nivel Avanzado](flutter_09.png)
+![Nivel Extremo](flutter_10.png)
+![Entrada Invalida](flutter_11.png)
+![Scroll e Historial](flutter_12.png)
+
 ## Instalación y ejecución
 
 1. Clona el repositorio:
