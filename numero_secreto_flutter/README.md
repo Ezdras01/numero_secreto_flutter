@@ -18,7 +18,7 @@ Incluye validación de entradas, historial de intentos y gestión dinámica de n
 ![Cuando Pierdes](screenshot/flutter_04.png)
 ![Reinicio Automático](screenshot/flutter_05.png)
 ![Cambio de Dificultad](screenshot/flutter_06.png)
-![Dificultades](screenshot/flutter_07.png)
+![Dificultad](screenshot/flutter_07.png)
 ![Nivel Medio](screenshot/flutter_08.png)
 ![Nivel Avanzado](screenshot/flutter_09.png)
 ![Nivel Extremo](screenshot/flutter_10.png)
