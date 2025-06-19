@@ -27,9 +27,18 @@ Incluye validación de entradas, historial visual de intentos y gestión dinámi
 |----------|---------------------|------------------|
 | ![Reinicio](screenshot/flutter_05.png) | ![Dificultad](screenshot/flutter_06.png) | ![Entrada inválida](screenshot/flutter_11.png) |
 
-| Niveles | Historial Scroll |
-|---------|------------------|
-| ![Nivel Medio](screenshot/flutter_08.png) ![Nivel Avanzado](screenshot/flutter_09.png) ![Nivel Extremo](screenshot/flutter_10.png) | ![Historial](screenshot/flutter_12.png) |
+### 📊 Diferentes niveles de dificultad
+
+| Nivel Medio | Nivel Avanzado | Nivel Extremo |
+|-------------|----------------|---------------|
+| ![Nivel Medio](screenshot/flutter_08.png) | ![Nivel Avanzado](screenshot/flutter_09.png) | ![Nivel Extremo](screenshot/flutter_10.png) |
+
+### 🧾 Historial con scroll dinámico
+
+<p align="center">
+  <img src="screenshot/flutter_12.png" width="30%" />
+</p>
+
 
 ---
 
