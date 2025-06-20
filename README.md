@@ -59,6 +59,17 @@ futter run
 4. Generar APK
 flutter build apk --release
 
+## 📦 Descarga rápida
+
+Puedes descargar directamente el APK aquí:
+
+👉 [Descargar APK v1.0.0](https://github.com/Ezdras01/numero_secreto_flutter/releases/download/v1.0.0/app-release.apk)
+
+> Si no puedes instalarlo directamente, asegúrate de permitir la instalación de aplicaciones desde fuentes externas en tu dispositivo Android.
+
+
 ## Autor
 
 - Ezra Lehi Cortez — [@Ezdras01](https://github.com/Ezdras01)
+
+
